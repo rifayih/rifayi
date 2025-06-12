@@ -61,10 +61,10 @@
 % ----------------------------------------------------------
 
 % Replace these with the values based on your visual inspection
-x1 = 8.73;  % left
-x2 = 9.47;  % right
-y1 = -11.95;  % bottom
-y2 = -11.17;  % top
+x1 = fill your coordinates here;  % left
+x2 =fill your coordinates here;  % right
+y1 = fill your coordinates here;  % bottom
+y2 = fill your coordinates here;  % top
 
 % Select region
 region = ebsd(ebsd.x >= x1 & ebsd.x <= x2 & ebsd.y >= y1 & ebsd.y <= y2);
