@@ -1,0 +1,177 @@
+%.........................................................
+%Step 1 ( uncomment step 1 and get the coordinates for selected portion)
+%.........................................................
+
+% clc;
+% clear;
+% startup_mtex;
+% 
+% filename = 'Project 1 Specimen 1 Site 5 Map Data 5.ctf';
+% 
+% % Load EBSD data
+% ebsd = EBSD.load(filename, ...
+%     'interface', 'ctf', ...
+%     'convertEuler2SpatialReferenceFrame', false, ...
+%     'convertSpatial2EulerReferenceFrame', false);
+% ebsd = flipud(ebsd);
+% 
+% % Define custom colors
+% colorMap = containers.Map;
+% colorMap('Iron bcc (old)') = [1 0 0];   % Red
+% colorMap('Iron fcc')        = [0 1 0];   % Green
+% colorMap('V C')             = [1 1 0];   % Yellow
+% colorMap('notIndexed')      = [0 0 0];   % Black
+% 
+% % Build colormap
+% nPhases = length(ebsd.mineralList);
+% cmap = zeros(nPhases, 3);
+% for i = 1:nPhases
+%     mineral = char(ebsd.mineralList(i));
+%     if isKey(colorMap, mineral)
+%         cmap(i, :) = colorMap(mineral);
+%     else
+%         cmap(i, :) = rand(1, 3);
+%     end
+% end
+% 
+% % Plot EBSD map
+% fig = figure('Name', 'Select ROI via Clicks', 'Position', [100, 100, 1000, 1000]);
+% plot(ebsd, ebsd.phase, 'colormap', cmap, 'phasecolorkey', 'on');
+% axis equal tight;
+% title('🖱️ Click Two Opposite Corners to Define ROI', 'FontSize', 14);
+% mtexColorbar;
+% 
+% % Use ginput to select two corners
+% disp('🖱️ Click two opposite corners of your desired ROI...');
+% [x, y] = ginput(2);
+% 
+% % Get coordinates
+% x1 = min(x); x2 = max(x);
+% y1 = min(y); y2 = max(y);
+% 
+% fprintf('📦 Selected ROI:\n  x1 = %.2f\n  x2 = %.2f\n  y1 = %.2f\n  y2 = %.2f\n\n', x1, x2, y1, y2);
+% 
+% % You can now use:
+% % region = ebsd(ebsd.x >= x1 & ebsd.x <= x2 & ebsd.y >= y1 & ebsd.y <= y2);
+
+
+
+% ----------------------------------------------------------
+% --- Step 2: Manually select ROI based on visual scale ---( here make the step 1 on comment mode and run the rest of code)
+% ----------------------------------------------------------
+
+% Replace these with the values based on your visual inspection
+x1 = 8.73;  % left
+x2 = 9.47;  % right
+y1 = -11.95;  % bottom
+y2 = -11.17;  % top
+
+% Select region
+region = ebsd(ebsd.x >= x1 & ebsd.x <= x2 & ebsd.y >= y1 & ebsd.y <= y2);
+uniquePhases = unique(region.phase);
+uniquePhases = uniquePhases(uniquePhases ~= 0);
+
+% Validate number of phases
+if length(uniquePhases) ~= 3
+    error('Selected region does not contain exactly 3 phases.');
+end
+
+% Count and identify minor phase
+counts = zeros(1,3);
+for k = 1:3
+    counts(k) = sum(region.phase == uniquePhases(k));
+end
+totalPoints = sum(counts);
+proportions = counts / totalPoints;
+[~, minIdx] = min(proportions);
+minorPhase = uniquePhases(minIdx);
+
+% Get phase names
+phaseNames = cell(3, 1);
+for k = 1:3
+    phase_k_data = region(region.phase == uniquePhases(k));
+    phaseNames{k} = char(phase_k_data.CS.mineral);
+end
+
+% Validate phase names
+disp(phaseNames);
+assert(length(phaseNames) == 3, '❌ Phase name list does not contain exactly 3 entries.');
+
+% Prepare output folder
+outputFolder = fullfile(pwd, 'Selected_region_details');
+if ~exist(outputFolder, 'dir')
+    mkdir(outputFolder);
+end
+pdfFileList = {};
+
+% Phase map of ROI
+fig = figure('Visible','off', 'Position', [100, 100, 800, 800]);
+tiledlayout(1, 1, 'Padding', 'compact', 'TileSpacing', 'compact');
+plot(region, region.phase, 'colormap', cmap, 'phasecolorkey', 'on');
+axis equal tight;
+titleText = sprintf('3-Phase Region: %s, %s, %s', ...
+    phaseNames{1}, phaseNames{2}, phaseNames{3});
+sgtitle(titleText, ...
+    'Interpreter', 'none', ...
+    'FontSize', 12, ...
+    'FontWeight', 'bold', ...
+    'Color', 'w');
+fname = fullfile(outputFolder, 'selected_region_phasemap.pdf');
+exportgraphics(fig, fname, 'ContentType', 'vector');
+close(fig);
+pdfFileList{end+1} = fname;
+
+% Pole Figures for each phase
+for k = 1:3
+    data_k = region(region.phase == uniquePhases(k));
+    cs = data_k.CS;
+    h = [Miller(1,0,0,cs), Miller(1,1,0,cs), Miller(1,1,1,cs)];
+
+    fig = figure('Visible','off');
+    plotPDF(data_k.orientations, h, 'contourf', 'antipodal', 'silent');
+    isMinor = (uniquePhases(k) == minorPhase);
+    if isMinor
+        title(sprintf('PF for %s (Minor Phase)-(111)', phaseNames{k}));
+    else
+        title(sprintf('PF for %s-(111)', phaseNames{k}));
+    end
+    fname = fullfile(outputFolder, sprintf('manual_pf_%s.pdf', phaseNames{k}));
+    exportgraphics(fig, fname, 'ContentType', 'vector');
+    close(fig);
+    pdfFileList{end+1} = fname;
+end
+
+% ----------------------------------------------------------
+% --- Step 3: Show full EBSD map with white dashed circle ---
+% ----------------------------------------------------------
+
+fig = figure('Visible','off', 'Position', [100, 100, 1000, 1000]);
+tiledlayout(1, 1, 'Padding', 'compact', 'TileSpacing', 'compact');
+plot(ebsd, ebsd.phase, 'colormap', cmap, 'phasecolorkey', 'on');
+axis equal tight;
+hold on;
+
+% Draw white dashed circle
+cx = (x1 + x2)/2;
+cy = (y1 + y2)/2;
+radius = sqrt((x2 - x1)^2 + (y2 - y1)^2)/2;
+theta = linspace(0, 2*pi, 500);
+xCirc = cx + radius * cos(theta);
+yCirc = cy + radius * sin(theta);
+plot(xCirc, yCirc, '--w', 'LineWidth', 2.5);  % White dashed circle
+
+hold off;
+sgtitle('Full EBSD Phase Map with Selected  Region (3-Phase)', ...
+    'Interpreter', 'none', 'FontSize', 13, 'FontWeight', 'bold','color','w');
+fname = fullfile(outputFolder, 'full_map_with_dashed_circle.pdf');
+exportgraphics(fig, fname, 'ContentType', 'image');
+close(fig);
+pdfFileList{end+1} = fname;
+
+% ----------------------------------------------------------
+% --- Step 4: Merge all PDFs into a single final report ---
+% ----------------------------------------------------------
+
+finalPDF = fullfile(pwd, 'Final_ManualROI_3Phase_Report.pdf');
+append_pdfs(finalPDF, pdfFileList{:});
+fprintf('Final merged PDF created: %s\n', finalPDF);
