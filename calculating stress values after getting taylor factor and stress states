@@ -1,0 +1,324 @@
+clc;
+clear;
+
+vec1 = [1, 0, 0];
+vec2 = [0, 1, 0];
+vec3 = [0, 0, 1];
+
+stress_a1 = 1;
+stress_a2 = -1;
+stress_a3 = 0;
+stress_b1 = 0;
+stress_b2 = 0;
+stress_b3 = 0;
+stress_c1 =-1;
+stress_c2 = 0;
+stress_c3 = 1;
+stress_d1 = 0;
+stress_d2 = 1;
+stress_d3 = -1;
+
+stressVectors = {
+    [stress_a1, stress_a2, stress_a3];
+    [stress_a1, stress_a2, stress_a3];
+    [stress_a1, stress_a2, stress_a3];
+    [stress_b1, stress_b2, stress_b3];
+    [stress_b1, stress_b2, stress_b3];
+    [stress_b1, stress_b2, stress_b3];
+    [stress_c1, stress_c2, stress_c3];
+    [stress_c1, stress_c2, stress_c3];
+    [stress_c1, stress_c2, stress_c3];
+    [stress_d1, stress_d2, stress_d3];
+    [stress_d1, stress_d2, stress_d3];
+    [stress_d1, stress_d2, stress_d3]
+};
+
+
+% Calculations of E_Matrix for 'a' family
+
+a_n = [1, 1, 1];
+a1_b = [0, 1, -1];
+E11a1 = (dot(a_n, vec1) * dot(a1_b, vec1)) / sqrt(6) * stress_a1;
+E22a1 = (dot(a_n, vec2) * dot(a1_b, vec2)) / sqrt(6) * stress_a1;
+E33a1 = (dot(a_n, vec3) * dot(a1_b, vec3)) / sqrt(6) * stress_a1;
+E12a1 = (dot(a_n, vec1) * dot(a1_b, vec2) + dot(a_n, vec2) * dot(a1_b, vec1)) / sqrt(6) * stress_a1;
+E13a1 = (dot(a_n, vec1) * dot(a1_b, vec3) + dot(a_n, vec3) * dot(a1_b, vec1)) / sqrt(6) * stress_a1;
+E23a1 = (dot(a_n, vec2) * dot(a1_b, vec3) + dot(a_n, vec3) * dot(a1_b, vec2)) / sqrt(6) * stress_a1;
+EA1 = [E11a1, E12a1, E13a1, E12a1, E22a1, E23a1, E13a1, E23a1, E33a1];
+EA1_column = [E22a1; E33a1; E23a1; E13a1; E12a1];
+
+a_n = [1, 1, 1];
+a2_b = [-1, 0, 1];
+E11a2 = (dot(a_n, vec1) * dot(a2_b, vec1)) / sqrt(6) * stress_a2;
+E22a2 = (dot(a_n, vec2) * dot(a2_b, vec2)) / sqrt(6) * stress_a2;
+E33a2 = (dot(a_n, vec3) * dot(a2_b, vec3)) / sqrt(6) * stress_a2;
+E12a2 = (dot(a_n, vec1) * dot(a2_b, vec2) + dot(a_n, vec2) * dot(a2_b, vec1)) / sqrt(6) * stress_a2;
+E13a2 = (dot(a_n, vec1) * dot(a2_b, vec3) + dot(a_n, vec3) * dot(a2_b, vec1)) / sqrt(6) * stress_a2;
+E23a2 = (dot(a_n, vec2) * dot(a2_b, vec3) + dot(a_n, vec3) * dot(a2_b, vec2)) / sqrt(6) * stress_a2;
+EA2 = [E11a2, E12a2, E13a2, E12a2, E22a2, E23a2, E13a2, E23a2, E33a2];
+EA2_column = [E22a2; E33a2; E23a2; E13a2; E12a2];
+
+a_n = [1, 1, 1];
+a3_b = [1, -1, 0];
+E11a3 = (dot(a_n, vec1) * dot(a3_b, vec1)) / sqrt(6) * stress_a3;
+E22a3 = (dot(a_n, vec2) * dot(a3_b, vec2)) / sqrt(6) * stress_a3;
+E33a3 = (dot(a_n, vec3) * dot(a3_b, vec3)) / sqrt(6) * stress_a3;
+E12a3 = (dot(a_n, vec1) * dot(a3_b, vec2) + dot(a_n, vec2) * dot(a3_b, vec1)) / sqrt(6) * stress_a3;
+E13a3 = (dot(a_n, vec1) * dot(a3_b, vec3) + dot(a_n, vec3) * dot(a3_b, vec1)) / sqrt(6) * stress_a3;
+E23a3 = (dot(a_n, vec2) * dot(a3_b, vec3) + dot(a_n, vec3) * dot(a3_b, vec2)) / sqrt(6) * stress_a3;
+EA3 = [E11a3, E12a3, E13a3, E12a3, E22a3, E23a3, E13a3, E23a3, E33a3];
+EA3_column = [E22a3; E33a3; E23a3; E13a3; E12a3];
+
+% Calculations of E_Matrix for 'b' family
+b_n = [-1, -1, 1];
+b1_b = [0, -1, -1];
+E11b1 = (dot(b_n, vec1) * dot(b1_b, vec1)) / sqrt(6) * stress_b1;
+E22b1 = (dot(b_n, vec2) * dot(b1_b, vec2)) / sqrt(6) * stress_b1;
+E33b1 = (dot(b_n, vec3) * dot(b1_b, vec3)) / sqrt(6) * stress_b1;
+E12b1 = (dot(b_n, vec1) * dot(b1_b, vec2) + dot(b_n, vec2) * dot(b1_b, vec1)) / sqrt(6) * stress_b1;
+E13b1 = (dot(b_n, vec1) * dot(b1_b, vec3) + dot(b_n, vec3) * dot(b1_b, vec1)) / sqrt(6) * stress_b1;
+E23b1 = (dot(b_n, vec2) * dot(b1_b, vec3) + dot(b_n, vec3) * dot(b1_b, vec2)) / sqrt(6) * stress_b1;
+EB1 = [E11b1, E12b1, E13b1, E12b1, E22b1, E23b1, E13b1, E23b1, E33b1];
+EB1_column = [E22b1; E33b1; E23b1; E13b1; E12b1];
+
+b_n = [-1, -1, 1];
+b2_b = [1, 0, 1];
+E11b2 = (dot(b_n, vec1) * dot(b2_b, vec1)) / sqrt(6) * stress_b2;
+E22b2 = (dot(b_n, vec2) * dot(b2_b, vec2)) / sqrt(6) * stress_b2;
+E33b2 = (dot(b_n, vec3) * dot(b2_b, vec3)) / sqrt(6) * stress_b2;
+E12b2 = (dot(b_n, vec1) * dot(b2_b, vec2) + dot(b_n, vec2) * dot(b2_b, vec1)) / sqrt(6) * stress_b2;
+E13b2 = (dot(b_n, vec1) * dot(b2_b, vec3) + dot(b_n, vec3) * dot(b2_b, vec1)) / sqrt(6) * stress_b2;
+E23b2 = (dot(b_n, vec2) * dot(b2_b, vec3) + dot(b_n, vec3) * dot(b2_b, vec2)) / sqrt(6) * stress_b2;
+EB2 = [E11b2, E12b2, E13b2, E12b2, E22b2, E23b2, E13b2, E23b2, E33b2];
+EB2_column = [E22b2; E33b2; E23b2; E13b2; E12b2];
+
+b_n = [-1, -1, 1];
+b3_b = [-1, 1, 0];
+E11b3 = (dot(b_n, vec1) * dot(b3_b, vec1)) / sqrt(6) * stress_b3;
+E22b3 = (dot(b_n, vec2) * dot(b3_b, vec2)) / sqrt(6) * stress_b3;
+E33b3 = (dot(b_n, vec3) * dot(b3_b, vec3)) / sqrt(6) * stress_b3;
+E12b3 = (dot(b_n, vec1) * dot(b3_b, vec2) + dot(b_n, vec2) * dot(b3_b, vec1)) / sqrt(6) * stress_b3;
+E13b3 = (dot(b_n, vec1) * dot(b3_b, vec3) + dot(b_n, vec3) * dot(b3_b, vec1)) / sqrt(6) * stress_b3;
+E23b3 = (dot(b_n, vec2) * dot(b3_b, vec3) + dot(b_n, vec3) * dot(b3_b, vec2)) / sqrt(6) * stress_b3;
+EB3 = [E11b3, E12b3, E13b3, E12b3, E22b3, E23b3, E13b3, E23b3, E33b3];
+EB3_column = [E22b3; E33b3; E23b3; E13b3; E12b3];
+
+% Calculations of E_Matrix for 'c' family
+c_n = [-1, 1, 1];
+c1_b = [0, 1, -1];
+E11c1 = (dot(c_n, vec1) * dot(c1_b, vec1)) / sqrt(6) * stress_c1;
+E22c1 = (dot(c_n, vec2) * dot(c1_b, vec2)) / sqrt(6) * stress_c1;
+E33c1 = (dot(c_n, vec3) * dot(c1_b, vec3)) / sqrt(6) * stress_c1;
+E12c1 = (dot(c_n, vec1) * dot(c1_b, vec2) + dot(c_n, vec2) * dot(c1_b, vec1)) / sqrt(6) * stress_c1;
+E13c1 = (dot(c_n, vec1) * dot(c1_b, vec3) + dot(c_n, vec3) * dot(c1_b, vec1)) / sqrt(6) * stress_c1;
+E23c1 = (dot(c_n, vec2) * dot(c1_b, vec3) + dot(c_n, vec3) * dot(c1_b, vec2)) / sqrt(6) * stress_c1;
+EC1 = [E11c1, E12c1, E13c1, E12c1, E22c1, E23c1, E13c1, E23c1, E33c1];
+EC1_column = [E22c1; E33c1; E23c1; E13c1; E12c1];
+
+c_n = [-1, 1, 1];
+c2_b = [1, 0, 1];
+E11c2 = (dot(c_n, vec1) * dot(c2_b, vec1)) / sqrt(6) * stress_c2;
+E22c2 = (dot(c_n, vec2) * dot(c2_b, vec2)) / sqrt(6) * stress_c2;
+E33c2 = (dot(c_n, vec3) * dot(c2_b, vec3)) / sqrt(6) * stress_c2;
+E12c2 = (dot(c_n, vec1) * dot(c2_b, vec2) + dot(c_n, vec2) * dot(c2_b, vec1)) / sqrt(6) * stress_c2;
+E13c2 = (dot(c_n, vec1) * dot(c2_b, vec3) + dot(c_n, vec3) * dot(c2_b, vec1)) / sqrt(6) * stress_c2;
+E23c2 = (dot(c_n, vec2) * dot(c2_b, vec3) + dot(c_n, vec3) * dot(c2_b, vec2)) / sqrt(6) * stress_c2;
+EC2 = [E11c2, E12c2, E13c2, E12c2, E22c2, E23c2, E13c2, E23c2, E33c2];
+EC2_column = [E22c2; E33c2; E23c2; E13c2; E12c2];
+
+c_n = [-1, 1, 1];
+c3_b = [-1, -1, 0];
+E11c3 = (dot(c_n, vec1) * dot(c3_b, vec1)) / sqrt(6) * stress_c3;
+E22c3 = (dot(c_n, vec2) * dot(c3_b, vec2)) / sqrt(6) * stress_c3;
+E33c3 = (dot(c_n, vec3) * dot(c3_b, vec3)) / sqrt(6) * stress_c3;
+E12c3 = (dot(c_n, vec1) * dot(c3_b, vec2) + dot(c_n, vec2) * dot(c3_b, vec1)) / sqrt(6) * stress_c3;
+E13c3 = (dot(c_n, vec1) * dot(c3_b, vec3) + dot(c_n, vec3) * dot(c3_b, vec1)) / sqrt(6) * stress_c3;
+E23c3 = (dot(c_n, vec2) * dot(c3_b, vec3) + dot(c_n, vec3) * dot(c3_b, vec2)) / sqrt(6) * stress_c3;
+EC3 = [E11c3, E12c3, E13c3, E12c3, E22c3, E23c3, E13c3, E23c3, E33c3];
+EC3_column = [E22c3; E33c3; E23c3; E13c3; E12c3];
+
+% Calculations of E_Matrix for 'd' family
+d_n = [1, -1, 1];
+d1_b = [0, -1, -1];
+E11d1 = (dot(d_n, vec1) * dot(d1_b, vec1)) / sqrt(6) * stress_d1;
+E22d1 = (dot(d_n, vec2) * dot(d1_b, vec2)) / sqrt(6) * stress_d1;
+E33d1 = (dot(d_n, vec3) * dot(d1_b, vec3)) / sqrt(6) * stress_d1;
+E12d1 = (dot(d_n, vec1) * dot(d1_b, vec2) + dot(d_n, vec2) * dot(d1_b, vec1)) / sqrt(6) * stress_d1;
+E13d1 = (dot(d_n, vec1) * dot(d1_b, vec3) + dot(d_n, vec3) * dot(d1_b, vec1)) / sqrt(6) * stress_d1;
+E23d1 = (dot(d_n, vec2) * dot(d1_b, vec3) + dot(d_n, vec3) * dot(d1_b, vec2)) / sqrt(6) * stress_d1;
+ED1 = [E11d1, E12d1, E13d1, E12d1, E22d1, E23d1, E13d1, E23d1, E33d1];
+ED1_column = [E22d1; E33d1; E23d1; E13d1; E12d1];
+
+d_n = [1, -1, 1];
+d2_b = [-1, 0, 1];
+E11d2 = (dot(d_n, vec1) * dot(d2_b, vec1)) / sqrt(6) * stress_d2;
+E22d2 = (dot(d_n, vec2) * dot(d2_b, vec2)) / sqrt(6) * stress_d2;
+E33d2 = (dot(d_n, vec3) * dot(d2_b, vec3)) / sqrt(6) * stress_d2;
+E12d2 = (dot(d_n, vec1) * dot(d2_b, vec2) + dot(d_n, vec2) * dot(d2_b, vec1)) / sqrt(6) * stress_d2;
+E13d2 = (dot(d_n, vec1) * dot(d2_b, vec3) + dot(d_n, vec3) * dot(d2_b, vec1)) / sqrt(6) * stress_d2;
+E23d2 = (dot(d_n, vec2) * dot(d2_b, vec3) + dot(d_n, vec3) * dot(d2_b, vec2)) / sqrt(6) * stress_d2;
+ED2 = [E11d2, E12d2, E13d2, E12d2, E22d2, E23d2, E13d2, E23d2, E33d2];
+ED2_column = [E22d2; E33d2; E23d2; E13d2; E12d2];
+
+d_n = [1, -1, 1];
+d3_b = [1, 1, 0];
+E11d3 = (dot(d_n, vec1) * dot(d3_b, vec1)) / sqrt(6) * stress_d3;
+E22d3 = (dot(d_n, vec2) * dot(d3_b, vec2)) / sqrt(6) * stress_d3;
+E33d3 = (dot(d_n, vec3) * dot(d3_b, vec3)) / sqrt(6) * stress_d3;
+E12d3 = (dot(d_n, vec1) * dot(d3_b, vec2) + dot(d_n, vec2) * dot(d3_b, vec1)) / sqrt(6) * stress_d3;
+E13d3 = (dot(d_n, vec1) * dot(d3_b, vec3) + dot(d_n, vec3) * dot(d3_b, vec1)) / sqrt(6) * stress_d3;
+E23d3 = (dot(d_n, vec2) * dot(d3_b, vec3) + dot(d_n, vec3) * dot(d3_b, vec2)) / sqrt(6) * stress_d3;
+ED3 = [E11d3, E12d3, E13d3, E12d3, E22d3, E23d3, E13d3, E23d3, E33d3];
+ED3_column = [E22d3; E33d3; E23d3; E13d3; E12d3];
+
+disp('EA1:');
+disp(EA1);
+disp('EA2:');
+disp(EA2);
+disp('EA3:');
+disp(EA3);
+disp('EB1:');
+disp(EB1);
+disp('EB2:');
+disp(EB2);
+disp('EB3:');
+disp(EB3);
+disp('EC1:');
+disp(EC1);
+disp('EC2:');
+disp(EC2);
+disp('EC3:');
+disp(EC3);
+disp('ED1:');
+disp(ED1);
+disp('ED2:');
+disp(ED2);
+disp('ED3:');
+disp(ED3);
+
+disp('EA1_column:');
+disp(EA1_column);
+disp('EA2_column:');
+disp(EA2_column);
+disp('EA3_column:');
+disp(EA3_column);
+disp('EB1_column:');
+disp(EB1_column);
+disp('EB2_column:');
+disp(EB2_column);
+disp('EB3_column:');
+disp(EB3_column);
+disp('EC1_column:');
+disp(EC1_column);
+disp('EC2_column:');
+disp(EC2_column);
+disp('EC3_column:');
+disp(EC3_column);
+disp('ED1_column:');
+disp(ED1_column);
+disp('ED2_column:');
+disp(ED2_column);
+disp('ED3_column:');
+disp(ED3_column);
+
+% Combine all slip systems into a cell array
+
+slipSystems = {EA1, EA2, EA3, EB1, EB2, EB3, EC1, EC2, EC3, ED1, ED2, ED3};
+
+% Calculate RSS and active slip systems with preallocation
+
+numSlipSystems = length(slipSystems);
+activeSlipSystems = zeros(1, numSlipSystems);
+activeCount = 0;
+
+for i = 1:numSlipSystems
+    rss = calculateRSS(slipSystems{i}, stressVectors{i});
+    if abs(rss) > 0.1
+        activeCount = activeCount + 1;
+        activeSlipSystems(activeCount) = i;
+    end
+end
+
+activeSlipSystems = activeSlipSystems(1:activeCount); 
+
+% Generate combinations of 5 active slip systems
+
+if length(activeSlipSystems) >= 5
+    combinations = nchoosek(activeSlipSystems, 5);
+    numCombinations = size(combinations, 1); 
+    disp(['Combinations of 5 active slip systems: ', num2str(numCombinations)]); 
+    disp(combinations);
+else
+    disp('Less than 5 slip systems are active.');
+end
+
+% g matrix calculation for finding strain in crystal referance frame
+
+a = 59 * pi / 180;
+b = 37 * pi / 180;
+c = 63 * pi / 180;
+G_matrix = [(cos(a) * cos(c)) - (sin(a) * sin(c) * cos(b)), (sin(a) * cos(c)) + (cos(a) * sin(c) * cos(b)), (sin(c) * sin(b));
+            (-cos(a) * sin(c)) - (sin(a) * cos(c) * cos(b)), (-sin(a) * sin(c)) + (cos(a) * cos(c) * cos(b)), cos(c) * sin(b);
+            sin(a) * sin(b), -cos(a) * sin(b), cos(b)];
+
+E_internal = [1, 0, 0; 0, -0.5, 0; 0, 0, -0.5];
+
+G_T = G_matrix';
+
+E_external = G_matrix * E_internal * G_T;
+
+E_external_column = [E_external(2,2);E_external(3,3);E_external(2,3)*2;E_external(1,3)*2;E_external(1,2)*2];
+
+num_combinations = size(combinations, 1);
+
+for i = 1:num_combinations
+    selected_indices = combinations(i,:);
+    
+    % Constructing the E_matrix using selected slip systems
+    E_matrix = [ ...
+        slipSystems{selected_indices(1)}([5,9,6,3,2])', ...
+        slipSystems{selected_indices(2)}([5,9,6,3,2])', ...
+        slipSystems{selected_indices(3)}([5,9,6,3,2])', ...
+        slipSystems{selected_indices(4)}([5,9,6,3,2])', ...
+        slipSystems{selected_indices(5)}([5,9,6,3,2])' ...
+    ];
+
+    fprintf('\nE_matrix for Combination %d:\n', i);
+    disp(E_matrix);
+
+    det_E = det(E_matrix);
+    fprintf('Determinant for Combination %d: %f\n', i, det_E);
+
+    if det_E == 0
+        fprintf('The determinant of E_matrix for Combination %d is zero.\n', i);
+    else
+        E_matrix_inverse = inv(E_matrix);
+        fprintf('Inverse of E_matrix for Combination %d:\n', i);
+        disp(E_matrix_inverse);
+
+        stress_values = (E_matrix_inverse) * E_external_column;
+        fprintf('Stress values for Combination %d:\n', i);
+        disp(stress_values);
+
+        summation_of_stresses = sum(stress_values(:));
+        fprintf('Summation of stresses for Combination %d: %f\n', i, summation_of_stresses);
+    end
+end
+
+
+
+disp('G Matrix:');
+disp(G_matrix);
+disp('G Transpose:');
+disp(G_T);
+disp('E_external:');
+disp(E_external);
+
+% Helper function to calculate Resolved Shear Stress (RSS)
+
+function rss = calculateRSS(slipSystem, stress)
+
+    stressTensor = [stress(1), 0, 0; 0, stress(2), 0; 0, 0, stress(3)];
+    shearStressTensor = [slipSystem(1), slipSystem(2), slipSystem(3); slipSystem(2), slipSystem(5), slipSystem(6); slipSystem(3), slipSystem(6), slipSystem(9)];
+    rss = trace(stressTensor * shearStressTensor);
+end
