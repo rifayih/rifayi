@@ -1,0 +1,84 @@
+clc;
+clear;
+
+% Define crystal symmetry (FCC cubic)
+CS = crystalSymmetry('cubic');
+
+% Define the FCC slip system
+SS = slipSystem.fcc(CS);
+
+% Number of orientations for each component
+num_111_110 = 250;
+num_random = 250;
+
+% Generate 250 random orientations
+ori_rand = orientation.rand(CS, num_random);
+
+% Define the ideal (111)[1-10] orientation
+ori_111_110 = orientation.byEuler(0, 54.73*degree, 45*degree, CS);
+
+% Define spread angle 
+spreadAngle = 10 * degree;
+
+% Create small random misorientations around the ideal orientation
+misos = rotation.rand(CS, num_111_110, 'halfwidth', spreadAngle);
+
+% Apply misorientations to the (111)[1-10] orientation
+ori_111_110_spread = ori_111_110 * misos;
+
+% Combine both sets of orientations
+ori_all = [ori_rand; ori_111_110_spread];
+
+% Equal weights
+num_total = length(ori_all);
+weights = ones(1, num_total) / num_total;
+
+% Orientation Distribution Function
+odf = calcDensity(ori_all, 'weights', weights, 'halfwidth', 10*degree);
+
+% Define strain ratios
+rho = linspace(0, 1, 41);
+
+% Compute Taylor factors and R-values
+[R, M, minM] = calcLankford(ori_all, SS,'verbose','rho', rho);
+
+% Plot only curves at 0°, 45°, and 90° 
+angle_indices = [1,10,19];  
+angle_labels = [0,45,90];
+
+M_0 = M(:, angle_indices(1));
+M_45 = M(:, angle_indices(2));
+M_90 = M(:, angle_indices(3));
+R_0 = R(:, angle_indices(1));
+R_45 = R(:, angle_indices(2));
+R_90 = R(:, angle_indices(3));
+R_bar = (R_0+R_90+(R_45*2))/4;
+Delta_R = (R_0+R_90-(R_45*2))/2;
+% Delta_R is shown by calcLankford function so now display R_bar
+disp('R_bar:');
+disp(R_bar);
+
+
+for idx = 1:length(angle_indices)
+    i = angle_indices(idx);
+    angle = angle_labels(idx);
+    
+    % Calculate rho based on R
+    rho_values = R(:, i) ./ (R(:, i) + 1);  % rho = R / (R + 1)
+    
+    % Display the values 
+    disp(['rho_', num2str(angle), ' =']);
+    disp(rho_values');
+end
+
+% Plot
+figure;
+plot(rho, M_0, '-o', 'LineWidth', 2); hold on;
+plot(rho, M_45, '-s', 'LineWidth', 2);
+plot(rho, M_90, '-^', 'LineWidth', 2);
+xlabel('\rho ');
+ylabel('Taylor factor, M');
+legend('\theta = 0°', '\theta = 45°', '\theta = 90°', 'Location', 'northeast');
+title('Taylor Factor vs \rho for 0°, 45°, 90°');
+grid on;
+
