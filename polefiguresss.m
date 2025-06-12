@@ -2,7 +2,7 @@ clc;
 clear;
 
 % Load EBSD data from your .ctf file
-ebsd = EBSD.load('Project 1 Specimen 1 Site 2 Map Data 2.ctf', ...
+ebsd = EBSD.load('fill your project name here', ...
                  'convertEuler2SpatialReferenceFrame');
 
 % Get unique phase IDs (excluding 0 which is unindexed/no phase)
