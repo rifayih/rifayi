@@ -6,7 +6,7 @@
 % clear;
 % startup_mtex;
 % 
-% filename = 'Project 1 Specimen 1 Site 5 Map Data 5.ctf';
+% filename = 'write your file name here';
 % 
 % % Load EBSD data
 % ebsd = EBSD.load(filename, ...
